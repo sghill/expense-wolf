@@ -46,7 +46,7 @@ public final class Reader {
 
     public ExpenseReports getAllExpenseReports() {
         Sheet[] sheets = workbook.getSheets();
-        log.info("Found [{}] sheets in spreadsheet", sheets.length);
+        log.debug("Found [{}] sheets in spreadsheet", sheets.length);
         return new ExpenseReports(union(map(iterableFrom(sheets), toExpenseReports())));
     }
 
@@ -62,7 +62,7 @@ public final class Reader {
     private Set<ExpenseReport> getAllExpenseReportsOnSheet(String name) {
         Set<ExpenseReport> reports = new HashSet<ExpenseReport>();
         int rows = workbook.getSheet(name).getRows();
-        log.info("Found [{}] rows in sheet [{}]", rows, name);
+        log.debug("Found [{}] rows in sheet [{}]", rows, name);
         for(int i = 1; i < rows; i++) {
             Collection<Cell> rowCells = collectionFrom(workbook.getSheet(name).getRow(i));
             if(!rowCells.isEmpty() && all(rowCells, containText())) {

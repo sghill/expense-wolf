@@ -46,4 +46,12 @@ public final class ExpenseReports {
             }
         };
     }
+
+    public String describeMostRecentPaidReportsFor(long employeeId) {
+        StringBuilder sb = new StringBuilder();
+        for(ExpenseReport report : getMostRecentPaidReportsFor(employeeId)) {
+            sb.append(report.describe());
+        }
+        return sb.toString();
+    }
 }

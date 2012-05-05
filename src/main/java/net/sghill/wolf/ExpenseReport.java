@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
 
 import static java.lang.Long.valueOf;
+import static java.lang.String.format;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Slf4j
@@ -21,7 +22,18 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
         this.employeeId = asLong(employeeId);
         this.datePaid = asLocalDate(datePaid);
         this.expenseId = expenseId;
-        log.debug("Created {}", toString());
+        log.trace("Created {}", toString());
+    }
+
+    public String describe() {
+        return format("\t\t\t\treport %s on %s\n", expenseId, datePaid.toString("MMMM dd, yyyy"));
+    }
+
+    @Override
+    public int compareTo(ExpenseReport o) {
+        if(datePaid.isBefore(o.getDatePaid())) { return -1; }
+        if(datePaid.isAfter(o.getDatePaid())) { return 1; }
+        return 0;
     }
 
     private static LocalDate asLocalDate(String datePaid) {
@@ -40,12 +52,5 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
             log.error("Could not parse employee id [{}].", employeeId);
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public int compareTo(ExpenseReport o) {
-        if(datePaid.isBefore(o.getDatePaid())) { return -1; }
-        if(datePaid.isAfter(o.getDatePaid())) { return 1; }
-        return 0;
     }
 }

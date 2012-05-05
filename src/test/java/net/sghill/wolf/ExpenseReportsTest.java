@@ -3,6 +3,7 @@ package net.sghill.wolf;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.javafunk.funk.matchers.Matchers.hasOnlyItemsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
@@ -27,5 +28,11 @@ public class ExpenseReportsTest {
         assertThat(expenseReports.getMostRecentPaidReportsFor(7000L), hasOnlyItemsInAnyOrder(
                 new ExpenseReport("7000", "10/21/2011", "1200"),
                 new ExpenseReport("7000", "10/21/2011", "8600")));
+    }
+
+    @Test
+    public void shouldDescribeMostRecentExpenseIdsForEmployee() {
+        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 1200 on October 21, 2011"));
+        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 8600 on October 21, 2011"));
     }
 }
