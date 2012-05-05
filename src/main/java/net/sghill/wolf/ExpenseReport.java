@@ -26,7 +26,7 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
     }
 
     public String describe() {
-        return format("\t\t\t\treport %s on %s\n", expenseId, datePaid.toString("MMMM dd, yyyy"));
+        return format("\t\t\t\treport %s on %s\n", expenseId, datePaid.toString("MMM dd, yyyy"));
     }
 
     @Override

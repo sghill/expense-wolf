@@ -75,7 +75,13 @@ public final class Wolf {
         }
 
         String filename = commandLine.getOptionValue("f");
-        System.out.println(new Reader(filename).getAllExpenseReports().describeMostRecentPaidReportsFor(valueOf(employeeId)));
+        ExpenseReports allExpenseReports = new Reader(filename).getAllExpenseReports();
+        if(commandLine.hasOption("a")) {
+            System.out.println(allExpenseReports.describePaidReportsFor(valueOf(employeeId)));
+        } else {
+            System.out.println(allExpenseReports.describeMostRecentPaidReportsFor(valueOf(employeeId)));
+        }
+
     }
 
     private static Options createOptions() {
@@ -86,6 +92,7 @@ public final class Wolf {
         options.addOption("v", "verbose", false, "print the INFO log messages");
         options.addOption("h", "help", false, "print this message");
         options.addOption("q", "quiet", false, "turn off the logging");
+        options.addOption("a", "all", false, "get every expense report you've submitted");
         return options;
     }
 

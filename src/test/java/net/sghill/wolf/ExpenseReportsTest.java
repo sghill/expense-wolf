@@ -32,7 +32,14 @@ public class ExpenseReportsTest {
 
     @Test
     public void shouldDescribeMostRecentExpenseIdsForEmployee() {
-        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 1200 on October 21, 2011"));
-        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 8600 on October 21, 2011"));
+        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 1200 on Oct 21, 2011"));
+        assertThat(expenseReports.describeMostRecentPaidReportsFor(7000L), containsString("report 8600 on Oct 21, 2011"));
+    }
+
+    @Test
+    public void shouldDescribeAllExpenseIdsForEmployee() {
+        assertThat(expenseReports.describePaidReportsFor(5000L), containsString("report 1239 on Sep 23, 2011"));
+        assertThat(expenseReports.describePaidReportsFor(5000L), containsString("report 3995 on Oct 07, 2011"));
+        assertThat(expenseReports.describePaidReportsFor(5000L), containsString("report 5684 on Oct 21, 2011"));
     }
 }

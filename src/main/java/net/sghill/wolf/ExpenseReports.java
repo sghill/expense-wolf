@@ -54,4 +54,12 @@ public final class ExpenseReports {
         }
         return sb.toString();
     }
+
+    public String describePaidReportsFor(long employeeId) {
+        StringBuilder sb = new StringBuilder();
+        for(ExpenseReport report : getPaidReportsFor(employeeId)) {
+            sb.append(report.describe());
+        }
+        return sb.toString();
+    }
 }
