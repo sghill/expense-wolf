@@ -3,6 +3,7 @@ package net.sghill.wolf;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.javafunk.funk.functors.Predicate;
 import org.joda.time.LocalDate;
 
@@ -12,6 +13,7 @@ import static org.javafunk.funk.Eagerly.max;
 import static org.javafunk.funk.Lazily.filter;
 import static org.javafunk.funk.Literals.setFrom;
 
+@Slf4j
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
@@ -19,7 +21,9 @@ public final class ExpenseReports {
     private final Set<ExpenseReport> expenseReports;
 
     public Set<ExpenseReport> getPaidReportsFor(final long employeeId) {
-        return setFrom(filter(expenseReports, paidTo(employeeId)));
+        Set<ExpenseReport> reportsPaidToEmployee = setFrom(filter(expenseReports, paidTo(employeeId)));
+        log.info("Found [{}] expense reports paid to employee [{}]", reportsPaidToEmployee.size(), employeeId);
+        return reportsPaidToEmployee;
     }
 
     public Set<ExpenseReport> getMostRecentPaidReportsFor(final long employeeId) {

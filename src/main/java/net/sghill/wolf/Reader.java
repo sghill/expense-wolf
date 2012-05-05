@@ -3,30 +3,41 @@ package net.sghill.wolf;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import lombok.extern.slf4j.Slf4j;
 import org.javafunk.funk.functors.Mapper;
+import org.javafunk.funk.functors.Predicate;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static jxl.Workbook.getWorkbook;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.javafunk.funk.Eagerly.all;
 import static org.javafunk.funk.Lazily.map;
-import static org.javafunk.funk.Literals.iterableFrom;
-import static org.javafunk.funk.Literals.listFrom;
+import static org.javafunk.funk.Literals.*;
 import static org.javafunk.funk.Sets.union;
 
+@Slf4j
 public final class Reader {
     private final Workbook workbook;
 
-    public Reader(String classPathFileName) {
+    public Reader(String fileName) {
         try {
-            InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(classPathFileName);
-            workbook = resourceAsStream == null ? getWorkbook(new FileInputStream(classPathFileName)) : getWorkbook(resourceAsStream);
+            InputStream resource = this.getClass().getClassLoader().getResourceAsStream(fileName);
+            if (resource == null) {
+                resource = new FileInputStream(fileName);
+                log.info("File not found on classpath, attempting to locate on filesystem");
+            }
+            workbook = getWorkbook(resource);
         } catch (Exception e) {
+            log.error("File not found. Looked on classpath and filesystem for\n\t\t[{}]\n\n", fileName);
             throw new RuntimeException(e);
         }
+        log.info("Located [{}]", fileName);
     }
 
     public List<String> getHeaders() {
@@ -34,7 +45,9 @@ public final class Reader {
     }
 
     public ExpenseReports getAllExpenseReports() {
-        return new ExpenseReports(union(map(iterableFrom(workbook.getSheets()), toExpenseReports())));
+        Sheet[] sheets = workbook.getSheets();
+        log.info("Found [{}] sheets in spreadsheet", sheets.length);
+        return new ExpenseReports(union(map(iterableFrom(sheets), toExpenseReports())));
     }
 
     private Mapper<Sheet, Set<ExpenseReport>> toExpenseReports() {
@@ -48,13 +61,24 @@ public final class Reader {
 
     private Set<ExpenseReport> getAllExpenseReportsOnSheet(String name) {
         Set<ExpenseReport> reports = new HashSet<ExpenseReport>();
-        for(int i = 1; i < workbook.getSheet(name).getRows(); i++) {
-            Cell[] row = workbook.getSheet(name).getRow(i);
-            if(row.length != 0) {
-                reports.add(new ExpenseReport(row[0].getContents(), row[1].getContents(), row[2].getContents()));
+        int rows = workbook.getSheet(name).getRows();
+        log.info("Found [{}] rows in sheet [{}]", rows, name);
+        for(int i = 1; i < rows; i++) {
+            Collection<Cell> rowCells = collectionFrom(workbook.getSheet(name).getRow(i));
+            if(!rowCells.isEmpty() && all(rowCells, containText())) {
+                List<String> arguments = listFrom(map(rowCells, toContents()));
+                reports.add(new ExpenseReport(arguments.get(0), arguments.get(1), arguments.get(2)));
             }
         }
         return reports;
+    }
+
+    private static Predicate<Cell> containText() {
+        return new Predicate<Cell>() {
+            @Override public boolean evaluate(Cell cell) {
+                return isNotBlank(cell.getContents());
+            }
+        };
     }
 
     private static Mapper<Cell, String> toContents() {
