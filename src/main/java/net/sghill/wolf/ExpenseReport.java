@@ -32,8 +32,8 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
     @Override
     public int compareTo(ExpenseReport o) {
         if(datePaid.isBefore(o.getDatePaid())) { return -1; }
-        if(datePaid.isAfter(o.getDatePaid())) { return 1; }
-        return 0;
+        if (datePaid.isAfter(o.getDatePaid())) { return 1; }
+        return expenseId.compareTo(o.getExpenseId());
     }
 
     private static LocalDate asLocalDate(String datePaid) {
