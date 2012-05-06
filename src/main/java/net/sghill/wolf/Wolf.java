@@ -3,7 +3,9 @@ package net.sghill.wolf;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Properties;
 
 import static java.io.File.separator;
@@ -34,16 +36,11 @@ public final class Wolf {
             fatalError("file not specified. Expense report xls file required.");
         }
 
-        Long employeeId = null;
+        Long employeeId;
         if(noOption(EMPLOYEE_ID)) {
             log.info("No employee id specified. Pulling employee id from home directory.");
-            try {
-                Properties props = new Properties();
-                BufferedReader reader = new BufferedReader(new FileReader(filePath));
-                props.load(reader);
-                employeeId = valueOf(props.getProperty("employee.id"));
-                reader.close();
-            } catch (IOException e) {
+            employeeId = new PropertiesFileReader(filePath).getAsLong("employee.id");
+            if(employeeId == null) {
                 fatalError("[{}] not found. Specify -e or --employee-id so we know who to look for!", filePath);
             }
         } else {
