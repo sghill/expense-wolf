@@ -1,6 +1,5 @@
 package net.sghill.wolf;
 
-import ch.qos.logback.classic.Level;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
@@ -9,11 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+import static ch.qos.logback.classic.Level.DEBUG;
+import static ch.qos.logback.classic.Level.OFF;
 import static java.io.File.separator;
 import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static java.lang.System.exit;
 import static java.lang.System.getProperty;
+import static net.sghill.wolf.CommandLineOptions.*;
 
 @Slf4j
 public final class Wolf {
@@ -31,22 +33,22 @@ public final class Wolf {
             exit(1);
         }
 
-        if(commandLine.hasOption("h")) {
+        if(commandLine.hasOption(HELP.getShortCode())) {
             showHelp(options);
             exit(1);
         }
 
-        if(commandLine.hasOption("v")) {
+        if(commandLine.hasOption(VERBOSE.getShortCode())) {
             ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) Wolf.log;
-            logger.setLevel(Level.DEBUG);
+            logger.setLevel(DEBUG);
         }
 
-        if(commandLine.hasOption("q")) {
+        if(commandLine.hasOption(QUIET.getShortCode())) {
             ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) Wolf.log;
-            logger.setLevel(Level.OFF);
+            logger.setLevel(OFF);
         }
 
-        if(!commandLine.hasOption("f")) {
+        if(!commandLine.hasOption(FILE.getShortCode())) {
             log.error("file not specified. Expense report xls file required.");
             showHelp(options);
             exit(1);
@@ -54,7 +56,7 @@ public final class Wolf {
 
         String filePath = format("%s%sexpense-wolf.properties", getProperty("user.home"), separator);
         String employeeId = commandLine.getOptionValue("e");
-        if(!commandLine.hasOption("e")) {
+        if(!commandLine.hasOption(EMPLOYEE_ID.getShortCode())) {
             log.info("No employee id specified. Attemping to pull employee id from home directory.");
             try {
                 Properties props = new Properties();
@@ -79,7 +81,7 @@ public final class Wolf {
             }
         }
 
-        String filename = commandLine.getOptionValue("f");
+        String filename = commandLine.getOptionValue(FILE.getShortCode());
         ExpenseReports allExpenseReports = new Reader(filename).getAllExpenseReports();
         if(commandLine.hasOption("a")) {
             System.out.println(allExpenseReports.describePaidReportsFor(valueOf(employeeId)));
@@ -91,17 +93,14 @@ public final class Wolf {
 
     private static Options createOptions() {
         Options options = new Options();
-        options.addOption("e", "employee-id", true, "employee id number. can be saved with -s");
-        options.addOption("f", "file", true, "absolute path to expense report xls");
-        options.addOption("s", "save-id", false, "saves a file in home directory with employee id");
-        options.addOption("v", "verbose", false, "print the DEBUG log messages");
-        options.addOption("h", "help", false, "print this message");
-        options.addOption("q", "quiet", false, "turn off the logging");
-        options.addOption("a", "all", false, "get every expense report you've submitted");
+        for(CommandLineOptions opt : CommandLineOptions.values()) {
+            options.addOption(opt.getOption());
+        }
         return options;
     }
 
     private static void showHelp(Options options) {
         new HelpFormatter().printHelp("java -jar wolf.jar [OPTIONS] --file [absolute path to xls]", options);
     }
+
 }
