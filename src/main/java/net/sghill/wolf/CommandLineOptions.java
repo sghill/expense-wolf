@@ -10,9 +10,7 @@ public enum CommandLineOptions {
     FILE("f", "file", true, "absolute path to expense report xls"),
     ALL_REPORTS("a", "all", false, "get every expense report you've submitted"),
     SAVE("s", "save-id", false, "saves a file in home directory with employee id"),
-    HELP("h", "help", false, "print this message"),
-    QUIET("q", "quiet", false, "turn off the logging"),
-    VERBOSE("v", "verbose", false, "print the DEBUG log messages");
+    HELP("h", "help", false, "print this message");
 
     @Getter
     private final String shortCode;
@@ -20,7 +18,7 @@ public enum CommandLineOptions {
     private final boolean hasArgument;
     private final String description;
 
-    public Option getOption() {
+    public Option get() {
         return new Option(shortCode, longCode, hasArgument, description);
     }
 }
