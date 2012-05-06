@@ -36,6 +36,11 @@ public final class Wolf {
             exit(1);
         }
 
+        if(commandLine.hasOption("v")) {
+            ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) Wolf.log;
+            logger.setLevel(Level.DEBUG);
+        }
+
         if(commandLine.hasOption("q")) {
             ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) Wolf.log;
             logger.setLevel(Level.OFF);
@@ -89,7 +94,7 @@ public final class Wolf {
         options.addOption("e", "employee-id", true, "employee id number. can be saved with -s");
         options.addOption("f", "file", true, "absolute path to expense report xls");
         options.addOption("s", "save-id", false, "saves a file in home directory with employee id");
-        options.addOption("v", "verbose", false, "print the INFO log messages");
+        options.addOption("v", "verbose", false, "print the DEBUG log messages");
         options.addOption("h", "help", false, "print this message");
         options.addOption("q", "quiet", false, "turn off the logging");
         options.addOption("a", "all", false, "get every expense report you've submitted");
