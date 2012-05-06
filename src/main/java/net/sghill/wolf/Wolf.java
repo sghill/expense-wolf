@@ -3,9 +3,7 @@ package net.sghill.wolf;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 import static java.io.File.separator;
@@ -38,11 +36,13 @@ public final class Wolf {
 
         Long employeeId = null;
         if(noOption(EMPLOYEE_ID)) {
-            log.info("No employee id specified. Attempting to pull employee id from home directory.");
+            log.info("No employee id specified. Pulling employee id from home directory.");
             try {
                 Properties props = new Properties();
-                props.load(new FileReader(filePath));
+                BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                props.load(reader);
                 employeeId = valueOf(props.getProperty("employee.id"));
+                reader.close();
             } catch (IOException e) {
                 fatalError("[{}] not found. Specify -e or --employee-id so we know who to look for!", filePath);
             }
@@ -57,7 +57,9 @@ public final class Wolf {
             try {
                 Properties props = new Properties();
                 props.setProperty("employee.id", givenValueFor(EMPLOYEE_ID));
-                props.store(new FileWriter(filePath), "");
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+                props.store(writer, "");
+                writer.close();
             } catch (IOException e) {
                 fatalError("Could not save employee id to [{}]", filePath);
             }
