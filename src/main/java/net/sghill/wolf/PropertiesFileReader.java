@@ -34,7 +34,7 @@ public final class PropertiesFileReader {
     }
 
     private static RuntimeException runtimeError(Exception e, String formatStringMessage, Object... objects) {
-        PropertiesFileReader.log.error(formatStringMessage, objects);
+        log.error(formatStringMessage, objects);
         return new RuntimeException(e);
     }
 }

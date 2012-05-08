@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.javafunk.funk.matchers.Matchers.hasOnlyItemsInOrder;
+import static org.javafunk.funk.matchers.IterableMatchers.hasOnlyItemsInOrder;
 import static org.junit.Assert.assertThat;
 
 public class ExpenseReportsTest {
