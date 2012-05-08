@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.util.Properties;
 
 import static java.lang.Long.valueOf;
+import static net.sghill.wolf.Utilities.runtimeError;
 
 @Slf4j
 public final class PropertiesFileReader {
@@ -33,8 +34,4 @@ public final class PropertiesFileReader {
         }
     }
 
-    private static RuntimeException runtimeError(Exception e, String formatStringMessage, Object... objects) {
-        log.error(formatStringMessage, objects);
-        return new RuntimeException(e);
-    }
 }

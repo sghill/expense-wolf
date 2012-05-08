@@ -8,6 +8,7 @@ import org.joda.time.LocalDate;
 
 import static java.lang.Long.valueOf;
 import static java.lang.String.format;
+import static net.sghill.wolf.Utilities.runtimeError;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Slf4j
@@ -40,8 +41,7 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
         try {
             return forPattern("M/d/yy").parseLocalDate(datePaid);
         } catch (Exception e) {
-            log.error("Could not parse date paid [{}]", datePaid);
-            throw new RuntimeException(e);
+            throw runtimeError(e, "Could not parse date paid [{}]", datePaid);
         }
     }
 
@@ -49,8 +49,7 @@ public final class ExpenseReport implements Comparable<ExpenseReport> {
         try {
             return valueOf(employeeId);
         } catch (NumberFormatException e) {
-            log.error("Could not parse employee id [{}].", employeeId);
-            throw new RuntimeException(e);
+            throw runtimeError(e, "Could not parse employee id [{}].", employeeId);
         }
     }
 }

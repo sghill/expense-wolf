@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static jxl.Workbook.getWorkbook;
+import static net.sghill.wolf.Utilities.runtimeError;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.javafunk.funk.Eagerly.all;
 import static org.javafunk.funk.Lazily.map;
@@ -34,8 +35,7 @@ public final class Reader {
             }
             workbook = getWorkbook(resource);
         } catch (Exception e) {
-            log.error("File not found. Looked on classpath and filesystem for\n\t\t[{}]\n\n", fileName);
-            throw new RuntimeException(e);
+            throw runtimeError(e, "File not found. Looked on classpath and filesystem for\n\t\t[{}]\n\n", fileName);
         }
         log.info("Located [{}]", fileName);
     }

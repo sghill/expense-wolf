@@ -3,17 +3,13 @@ package net.sghill.wolf;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Properties;
-
 import static java.io.File.separator;
 import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static java.lang.System.exit;
 import static java.lang.System.getProperty;
 import static net.sghill.wolf.CommandLineOptions.*;
+import static org.javafunk.funk.Literals.mapWith;
 
 @Slf4j
 public final class Wolf {
@@ -51,16 +47,7 @@ public final class Wolf {
             if (noOption(EMPLOYEE_ID)) {
                 fatalError("Save requested, but --employee-id missing");
             }
-            try {
-                Properties props = new Properties();
-                props.setProperty("employee.id", givenValueFor(EMPLOYEE_ID));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-                props.store(writer, "");
-                writer.close();
-            } catch (IOException e) {
-                fatalError("Could not save employee id to [{}]", filePath);
-            }
-            log.info("Saved employee id to [{}]", filePath);
+            new PropertiesFileWriter(filePath).writeAndClose(mapWith("employee.id", givenValueFor(EMPLOYEE_ID)));
         }
 
         ExpenseReports allExpenseReports = new Reader(givenValueFor(FILE)).getAllExpenseReports();
