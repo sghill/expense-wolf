@@ -23,11 +23,21 @@ public class ExpenseReportsTest {
                 new ExpenseReport("5000", "10/21/2011", "5684")));
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void allExpenseIds_shouldBeImmutable() {
+        expenseReports.getPaidReportsFor(5000L).clear();
+    }
+
     @Test
     public void shouldGetMostRecentExpenseIdsForEmployee() {
         assertThat(expenseReports.getMostRecentPaidReportsFor(7000L), hasOnlyItemsInOrder(
                 new ExpenseReport("7000", "10/21/2011", "1200"),
                 new ExpenseReport("7000", "10/21/2011", "8600")));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void mostRecentExpenseIds_shouldBeImmutable() {
+        expenseReports.getMostRecentPaidReportsFor(7000L).clear();
     }
 
     @Test

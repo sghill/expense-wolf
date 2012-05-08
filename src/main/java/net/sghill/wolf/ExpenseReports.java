@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static java.util.Collections.unmodifiableSortedSet;
 import static org.javafunk.funk.Eagerly.filter;
 import static org.javafunk.funk.Eagerly.max;
 
@@ -24,12 +25,14 @@ public final class ExpenseReports {
     public SortedSet<ExpenseReport> getPaidReportsFor(final long employeeId) {
         SortedSet<ExpenseReport> reportsPaidToEmployee = new TreeSet<ExpenseReport>(filter(expenseReports, paidTo(employeeId)));
         log.info("Found [{}] expense reports paid to employee [{}]", reportsPaidToEmployee.size(), employeeId);
-        return reportsPaidToEmployee;
+        return unmodifiableSortedSet(reportsPaidToEmployee);
     }
 
-    public Set<ExpenseReport> getMostRecentPaidReportsFor(final long employeeId) {
+    public SortedSet<ExpenseReport> getMostRecentPaidReportsFor(final long employeeId) {
         final SortedSet<ExpenseReport> allPaidReports = getPaidReportsFor(employeeId);
-        return new TreeSet<ExpenseReport>(filter(allPaidReports, by(max(allPaidReports).getDatePaid())));
+        TreeSet<ExpenseReport> recentExpenseReports = new TreeSet<ExpenseReport>(filter(allPaidReports, by(max(allPaidReports).getDatePaid())));
+        log.info("Found [{}] recent expense reports paid to employee [{}]", recentExpenseReports.size(), employeeId);
+        return unmodifiableSortedSet(recentExpenseReports);
     }
 
     private static Predicate<ExpenseReport> by(final LocalDate mostRecentDatePaid) {
