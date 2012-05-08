@@ -26,8 +26,8 @@ public final class PropertiesFileWriter {
             properties.store(writer, "");
             writer.close();
         } catch (IOException e) {
-            throw runtimeError(e, "Could not save employee id to [{}]", fileName);
+            throw runtimeError(e, "Could not save {} to [{}]", keysAndVales.keySet(), fileName);
         }
-        log.info("Saved employee id to [{}]", fileName);
+        log.info("Saved {} to [{}]", keysAndVales.keySet(), fileName);
     }
 }
