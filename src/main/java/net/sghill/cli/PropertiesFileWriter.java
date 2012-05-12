@@ -1,4 +1,4 @@
-package net.sghill.wolf;
+package net.sghill.cli;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-import static net.sghill.wolf.Utilities.runtimeError;
+import static net.sghill.cli.Literals.runtimeError;
 
 @Slf4j
 @AllArgsConstructor

@@ -8,7 +8,7 @@ import org.joda.time.LocalDate;
 
 import static java.lang.Long.valueOf;
 import static java.lang.String.format;
-import static net.sghill.wolf.Utilities.runtimeError;
+import static net.sghill.cli.Literals.runtimeError;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Slf4j

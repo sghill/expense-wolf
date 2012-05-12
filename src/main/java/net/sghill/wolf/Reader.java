@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static jxl.Workbook.getWorkbook;
-import static net.sghill.wolf.Utilities.runtimeError;
+import static net.sghill.cli.Literals.runtimeError;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.javafunk.funk.Eagerly.all;
 import static org.javafunk.funk.Lazily.map;
