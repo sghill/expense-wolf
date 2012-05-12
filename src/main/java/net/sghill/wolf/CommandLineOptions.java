@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.apache.commons.cli.Option;
 
 @AllArgsConstructor
-public enum CommandLineOptions {
+public enum CommandLineOptions implements net.sghill.cli.options.CommandLineOptions {
     EMPLOYEE_ID("e", "employee-id", true, "employee id number. can be saved with -s"),
     FILE("f", "file", true, "absolute path to expense report xls"),
     ALL_REPORTS("a", "all", false, "get every expense report you've submitted"),
@@ -18,6 +18,7 @@ public enum CommandLineOptions {
     private final boolean hasArgument;
     private final String description;
 
+    @Override
     public Option get() {
         return new Option(shortCode, longCode, hasArgument, description);
     }

@@ -2,7 +2,6 @@ package net.sghill.cli;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 import org.javafunk.funk.monads.Option;
 
@@ -13,8 +12,7 @@ import static org.javafunk.funk.monads.Option.some;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class Property {
-    @Getter private final String key;
+public final class Value {
     private final String value;
 
     public Option<Long> asLong() {

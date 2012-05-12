@@ -1,4 +1,4 @@
-package net.sghill.cli;
+package net.sghill.cli.properties;
 
 import lombok.extern.slf4j.Slf4j;
 
