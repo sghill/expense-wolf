@@ -2,11 +2,18 @@ what
 ====
 Java command line tool that takes a very specific Excel spreadsheet and outputs the rows relevant to me. `--help` is included
 
+* The Wolf only ever needs to hear your employee id once. The Wolf remembers it from then on.
+* The Wolf tells you your most recent paid expense reports OR all your paid expense reports
+* The Wolf is Java, so...
+    * The Wolf [should] run on Mac, Windows, and Linux
+    * The Wolf is `private final String pretty` on the inside, too
+    * The Wolf has both desirable traits of a command-line app: efficient long-term number-crunching and slow startup time
+
 how
 ===
 usage
 -----
-    usage: java -jar wolf.jar [OPTIONS] --file [absolute path to xls]
+    usage: java -jar wolf-1.0.jar [OPTIONS] --file [absolute path to xls]
      -a,--all                 get every expense report you've submitted
      -e,--employee-id <arg>   employee id number. can be saved with -s
      -f,--file <arg>          absolute path to expense report xls
