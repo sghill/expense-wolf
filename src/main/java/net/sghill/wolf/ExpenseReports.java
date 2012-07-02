@@ -22,17 +22,28 @@ import static org.javafunk.funk.Eagerly.max;
 public final class ExpenseReports {
     private final Set<ExpenseReport> expenseReports;
 
-    public SortedSet<ExpenseReport> getPaidReportsFor(final long employeeId) {
+    public SortedSet<ExpenseReport> getPaidReportsFor(long employeeId) {
         SortedSet<ExpenseReport> reportsPaidToEmployee = new TreeSet<ExpenseReport>(filter(expenseReports, paidTo(employeeId)));
         log.info("Found [{}] expense reports paid to employee [{}]", reportsPaidToEmployee.size(), employeeId);
         return unmodifiableSortedSet(reportsPaidToEmployee);
     }
 
-    public SortedSet<ExpenseReport> getMostRecentPaidReportsFor(final long employeeId) {
+    public SortedSet<ExpenseReport> getMostRecentPaidReportsFor(long employeeId) {
         final SortedSet<ExpenseReport> allPaidReports = getPaidReportsFor(employeeId);
+        if(allPaidReports.isEmpty()) {
+            return allPaidReports;
+        }
         TreeSet<ExpenseReport> recentExpenseReports = new TreeSet<ExpenseReport>(filter(allPaidReports, by(max(allPaidReports).getDatePaid())));
         log.info("Found [{}] recent expense reports paid to employee [{}]", recentExpenseReports.size(), employeeId);
         return unmodifiableSortedSet(recentExpenseReports);
+    }
+
+    public String describeMostRecentPaidReportsFor(long employeeId) {
+        return describeTheSituationFor(getMostRecentPaidReportsFor(employeeId));
+    }
+
+    public String describePaidReportsFor(long employeeId) {
+        return describeTheSituationFor(getPaidReportsFor(employeeId));
     }
 
     private static Predicate<ExpenseReport> by(final LocalDate mostRecentDatePaid) {
@@ -51,19 +62,19 @@ public final class ExpenseReports {
         };
     }
 
-    public String describeMostRecentPaidReportsFor(long employeeId) {
+    private String describeTheSituationFor(SortedSet<ExpenseReport> reports) {
+        return reports.isEmpty() ? describeNoReports() : describe(reports);
+    }
+
+    private static String describe(SortedSet<ExpenseReport> paidReports) {
         StringBuilder sb = new StringBuilder();
-        for(ExpenseReport report : getMostRecentPaidReportsFor(employeeId)) {
+        for(ExpenseReport report : paidReports) {
             sb.append(report.describe());
         }
         return sb.toString();
     }
 
-    public String describePaidReportsFor(long employeeId) {
-        StringBuilder sb = new StringBuilder();
-        for(ExpenseReport report : getPaidReportsFor(employeeId)) {
-            sb.append(report.describe());
-        }
-        return sb.toString();
+    private static String describeNoReports() {
+        return "\t\t\t\tNo reports found\n";
     }
 }
