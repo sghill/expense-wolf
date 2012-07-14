@@ -3,6 +3,7 @@ build/
 .idea/
 .DS_Store
 .gradle/
+gradle/
 *.class
 *.iml
 *.iws
